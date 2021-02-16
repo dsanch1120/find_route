@@ -1,10 +1,27 @@
+import copy
+
+
 class Node:
     def __init__(self, name):
         self.name = name
         self.connections = {}
+        self.path = [name]
 
     def add_connection(self, connection, distance):
         self.connections[connection] = distance
+
+    def getName(self):
+        return self.name
+
+    def getConnectionCost(self, destination):
+        return int(self.connections[destination])
+
+    def updatePath(self, destination):
+        # self.path = copy.deepcopy(self.path) + [copy.deepcopy(destination)]
+        self.path += copy.deepcopy(destination)
+
+    def getPath(self):
+        return self.path
 
 
 class Graph:
@@ -23,6 +40,21 @@ class Graph:
             self.add_node(destination)
         self.cities[origin].add_connection(destination, length)
         self.cities[destination].add_connection(origin, length)
+
+    def output(self, distance, route):
+        if distance == -1:
+            print("distance: infinity")
+        else:
+            print("distance: %d km" % distance)
+        print("route:")
+        if len(route) == 0:
+            print("none")
+        else:
+            for i in route:
+                print(i)
+
+    def getNode(self, name):
+        return self.cities[name]
 
 
 """
