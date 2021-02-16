@@ -1,21 +1,20 @@
-# This is a sample Python script.
+# Created by Daniel Sanchez
+# CSCI 404 - Project 1: Uninformed Search
+# Due February 18, 2021
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 import sys
 import copy
 from graph import Graph
 
 
+# Checks for proper number of arguments. Returns array of arguments
 def handleArgs():
     if len(sys.argv) != 4:
         sys.exit("Incorrect number of arguments")
     return [sys.argv[1], sys.argv[2], sys.argv[3]]
 
 
-# return ["input1.txt", "Bremen", "Frankfurt"]  # FIXME
-
-
+# Converts text file input to a graph
 def createGraph(f_name):
     f = open(f_name, "r")
     f_lines = f.readlines()
@@ -31,6 +30,7 @@ def createGraph(f_name):
     return g
 
 
+# Finds the options to explore with the minimum cost
 def findMin(frontier):
     minKey = -1
     minVal = -1
@@ -46,16 +46,7 @@ def findMin(frontier):
     return minKey
 
 
-def bestSolution(solutions):
-    minCost = -1
-    rIndex = 0
-    for i in solutions:
-        if minCost == -1 or solutions[i] < minCost:
-            minCost = solutions[i]
-            rIndex = i
-    return rIndex
-
-
+# Takes in an array of solutions and formats it according to project requirements
 def formatSolution(g, solution):
     output = []
     i = len(solution) - 1
@@ -89,7 +80,7 @@ def findPaths(g, origin, destination):
                 n.updatePath(copy.deepcopy(node.getPath()))
     return -1
 
-
+# Depending on the inputs, creates output in accordance with project requirements
 def handleOutput(output, args):
     distance = ""
     route = []
@@ -108,10 +99,8 @@ def handleOutput(output, args):
     for i in route:
         print(i)
 
-
-# Press the green button in the gutter to run the script.
+# Main function
 if __name__ == '__main__':
     args = handleArgs()
     op = findPaths(createGraph(args[0]), args[1], args[2])
     handleOutput(op, args)
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
