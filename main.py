@@ -15,7 +15,7 @@ def handleArgs():
 
 
 # Converts text file input to a graph
-def createGraph(f_name):
+def createGraph(f_name, origin, destination):
     f = open(f_name, "r")
     f_lines = f.readlines()
 
@@ -27,6 +27,8 @@ def createGraph(f_name):
         if s[0] == "END":
             break
         g.add_path(s[0], s[1], s[2])
+    g.getNode(origin)
+    g.getNode(destination)
     return g
 
 
@@ -102,5 +104,5 @@ def handleOutput(output, args):
 # Main function
 if __name__ == '__main__':
     args = handleArgs()
-    op = findPaths(createGraph(args[0]), args[1], args[2])
+    op = findPaths(createGraph(args[0], args[1], args[2]), args[1], args[2])
     handleOutput(op, args)

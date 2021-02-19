@@ -64,4 +64,7 @@ class Graph:
 
     # Returns a specific node given it's name
     def getNode(self, name):
-        return self.cities[name]
+        if name in self.cities:
+            return self.cities[name]
+        else:
+            exit("Incorrect input")
