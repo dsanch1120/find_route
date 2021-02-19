@@ -61,46 +61,39 @@ def formatSolution(g, solution):
         i -= 1
     return output
 
-
-# Given a graph, finds the optimal path between two nodes.
+#Given an origin and destination, finds the optimal path between them.
 def findPaths(g, origin, destination):
     node = g.getNode(origin)
     cost = 0
     frontier = [{node: copy.deepcopy(cost)}]
-    explored = set()
-    while len(frontier) > 0:
-        mk = frontier.pop(findMin(frontier))
-        node = list(mk.keys())[0]
-        cost = int(mk[node])
-        if node.getName() == destination:
-            return [cost, formatSolution(g, node.getPath())]
-        explored.add(copy.deepcopy(node.getName()))
-        for n in node.connections:
-            n = copy.deepcopy(g.getNode(n))
-            if copy.deepcopy(n.getName()) not in explored:
-                frontier.append({n: cost + node.getConnectionCost(n.getName())})
-                n.updatePath(copy.deepcopy(node.getPath()))
-    return -1
 
-def findPaths2(g, origin, destination):
-    node = g.getNode(origin)
-    cost = 0
-    frontier = [{node: copy.deepcopy(cost)}]
-    count = 0
     while len(frontier) > 0:
         mk = frontier.pop(findMin(frontier))
         node = list(mk.keys())[0]
         cost = int(mk[node])
+        if cost >= g.getDiameter():
+            continue
         if node.getName() == destination:
             return [cost, formatSolution(g, node.getPath())]
         for n in node.connections:
             n = copy.deepcopy(g.getNode(n))
+            replace = False
+            for i in range(len(frontier)):
+                name = list(frontier[i].keys())[0]
+                c = int(frontier[i][name])
+                if name.getName() == n.getName():
+                    if c < node.getConnectionCost(n.getName()):
+                        frontier.pop(i)
+                        frontier.append({n: cost + node.getConnectionCost(n.getName())})
+                        n.updatePath(copy.deepcopy(node.getPath()))
+                        replace = True
+                        break
+                    replace = True
+            if replace:
+                continue
             frontier.append({n: cost + node.getConnectionCost(n.getName())})
             n.updatePath(copy.deepcopy(node.getPath()))
-        if count == 10000:
-            return -1
-        else:
-            count += 1
+    return -1
 
 # Depending on the inputs, creates output in accordance with project requirements
 def handleOutput(output, args):
@@ -124,5 +117,5 @@ def handleOutput(output, args):
 # Main function
 if __name__ == '__main__':
     args = handleArgs()
-    op = findPaths2(createGraph(args[0], args[1], args[2]), args[1], args[2])
+    op = findPaths(createGraph(args[0], args[1], args[2]), args[1], args[2])
     handleOutput(op, args)

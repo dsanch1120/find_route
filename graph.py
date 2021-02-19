@@ -46,6 +46,7 @@ class Graph:
     # Initiates global variables
     def __init__(self):
         self.cities = {}
+        self.diameter = 0
     
     # Adds a node object to the graph
     def add_node(self, node):
@@ -61,6 +62,7 @@ class Graph:
             self.add_node(destination)
         self.cities[origin].add_connection(destination, length)
         self.cities[destination].add_connection(origin, length)
+        self.diameter += int(length)
 
     # Returns a specific node given it's name
     def getNode(self, name):
@@ -68,3 +70,7 @@ class Graph:
             return self.cities[name]
         else:
             exit("Incorrect input")
+
+    def getDiameter(self):
+        return self.diameter
+
