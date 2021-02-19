@@ -82,6 +82,26 @@ def findPaths(g, origin, destination):
                 n.updatePath(copy.deepcopy(node.getPath()))
     return -1
 
+def findPaths2(g, origin, destination):
+    node = g.getNode(origin)
+    cost = 0
+    frontier = [{node: copy.deepcopy(cost)}]
+    count = 0
+    while len(frontier) > 0:
+        mk = frontier.pop(findMin(frontier))
+        node = list(mk.keys())[0]
+        cost = int(mk[node])
+        if node.getName() == destination:
+            return [cost, formatSolution(g, node.getPath())]
+        for n in node.connections:
+            n = copy.deepcopy(g.getNode(n))
+            frontier.append({n: cost + node.getConnectionCost(n.getName())})
+            n.updatePath(copy.deepcopy(node.getPath()))
+        if count == 10000:
+            return -1
+        else:
+            count += 1
+
 # Depending on the inputs, creates output in accordance with project requirements
 def handleOutput(output, args):
     distance = ""
@@ -104,5 +124,5 @@ def handleOutput(output, args):
 # Main function
 if __name__ == '__main__':
     args = handleArgs()
-    op = findPaths(createGraph(args[0], args[1], args[2]), args[1], args[2])
+    op = findPaths2(createGraph(args[0], args[1], args[2]), args[1], args[2])
     handleOutput(op, args)
